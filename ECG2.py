@@ -18,7 +18,7 @@ def ReadChannel(channel):
 # Function to convert data to voltage level,
 # rounded to specified number of decimal places. 
 def ConvertVolts(data,places):
-  volts = (data * 3.3) / float(1023)
+  volts = (data * 3.3) / float(40960)-1
   volts = round(volts,places)  
   return volts
   
@@ -30,10 +30,6 @@ while i<200:
   # Read the light sensor data
   ECG_level = ReadChannel(0)
   ECG_volts.append(ConvertVolts(ECG_level,2))
-  file = open('ECG_Radings.csv','a',newline='')
-  wr=csv.writer(file)
-  wr.writerow(ConvertVolts(ECG_level,2))
-  file.close()
 
   # Print out results
   print( "--------------------------------------------" ) 
@@ -41,6 +37,11 @@ while i<200:
   i=i+1
   # Wait before repeating loop
   time.sleep(delay)
+file = open('ECG_Radings.csv','a',newline='')
+wr=csv.writer(file)
+wr.writerow(ECG_volts)
+file.close()
+
 pl.plot(ECG_volts,label="ECG")
 pl.legend()
 pl.show()
