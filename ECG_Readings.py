@@ -13,6 +13,7 @@ import requests
 
 def ECg_Readings():
 
+    print('ECG sensors starting...')
     ECG_volts=[]
 
     def ReadChannel(channel):
@@ -37,8 +38,8 @@ def ECg_Readings():
         timeString = now.strftime("%Y-%m-%d %H:%M:%S.%f")
 
         # Print out results
-        print( "--------------------------------------------" ) 
-        print("ECG_volts : {} ({}V)".format(i,ECG_volts[i])) 
+        #print( "--------------------------------------------" ) 
+        #print("ECG_volts : {} ({}V)".format(i,ECG_volts[i])) 
         with open('ECG_Readings.csv', 'a') as log:
             log.write("{},{}\n".format(timeString, ECG_volts[i]))
        # Wait before repeating loop
@@ -52,3 +53,4 @@ def ECg_Readings():
     pl.plot(ECG_volts,label="ECG")
     pl.legend()
     pl.show()
+    return ECG_volts

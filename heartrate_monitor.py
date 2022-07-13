@@ -29,9 +29,10 @@ class HeartRateMonitor(object):
         self.print_result = print_result
 
     def run_sensor(self):
-        temp_sensor = W1ThermSensor()                # create an object to store a connection the sensor. 
+        temp_sensor = W1ThermSensor()                 # create an object to store a connection the sensor. 
         temperature = temp_sensor.get_temperature()   # get the current temperature from the DS18B20 sensor,
-
+        ECG = ECg_Readings()
+        print( "--------------------------------------------" )
         sensor = MAX30102()
         ir_data = []
         red_data = []
@@ -66,15 +67,7 @@ class HeartRateMonitor(object):
                             if self.print_result:
                                 print("Finger not detected")
                         if self.print_result:
-                            print("BPM: {0}, SpO2: {1}".format(self.bpm, spo2))
-                            print("The temperature is %s celsius" % temperature) # print the data in the form of a sentence that will tell the us what the temperature is in celsius.
-                            finalurl = baseURL +"&field2=%s&field3=%s&field4=%s" %(self.bpm,spo2,temperature)
-                            http = urllib3.PoolManager()
-                            f = http.request('GET',finalurl)
-                            f.read()
-                            f.close()
-                            print('ECG sensors starting...')
-                            ECG = ECg_Readings()
+
                             if temperature > 38 or temperature < 35 or spo2 < 92 or self.bpm < 60 or self.bpm > 100:                    # temperature threshold
                                 # *** take an action regarding the cloud ***
                                 report = {}
@@ -83,11 +76,19 @@ class HeartRateMonitor(object):
                                 report["value3"] = spo2
                                 #requests.post('https://maker.ifttt.com/trigger/123/with/key/nRm3Yf4BU-Irdwh4MnqoXmsH4SoHxY7wf7EpsgvFV26',data=report)
 
-                                    # break out of the loop
-                         
+                            for i in range(0,200)
+                                print("The temperature is {} celsius , BPM: {0}, SpO2: {1}".format(temperature,self.bpm, spo2))
+                                print("ECG_volts : {} ({}V)".format(i,ECG[i]))
+                                print( "--------------------------------------------" )
+                                finalurl = baseURL +"&field1=%s&field2=%s&field3=%s&field4=%s" %(ECG[i],self.bpm,spo2,temperature)
+                                http = urllib3.PoolManager()
+                                f = http.request('GET',finalurl)
+                                f.read()
+                                f.close()
+                                                     
 
             #time.sleep(self.LOOP_TIME)
-            time.sleep(0.06)
+            time.sleep(0.001)
 
         #sensor.shutdown()
 

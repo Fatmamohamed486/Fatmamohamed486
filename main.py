@@ -11,7 +11,7 @@ parser.add_argument("-t", "--time", type=int, default=30,
 args = parser.parse_args()
 
 while True:
-    print('Temperature and oximeter sensors starting...')
+    print('sensors starting...')
     hrm = HeartRateMonitor(print_raw=args.raw, print_result=(not args.raw))
     hrm.start_sensor()
     #time.sleep(25)
