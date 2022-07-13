@@ -28,7 +28,7 @@ def ECg_Readings():
         volts = round(volts,places)  
         return volts
     # Define delay between readings
-    for i in range (0,200):
+    for i in range (0,100):
 
         # Read the light sensor data
         ECG_level = ReadChannel(0)
@@ -47,7 +47,7 @@ def ECg_Readings():
         f = http.request('GET',baseURL +str(ECG_volts[i]))
         f.read()
         f.close()
-        time.sleep(0.003)
+        time.sleep(0.001)
 
     pl.plot(ECG_volts,label="ECG")
     pl.legend()

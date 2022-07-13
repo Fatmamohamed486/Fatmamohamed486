@@ -73,13 +73,15 @@ class HeartRateMonitor(object):
                             f = http.request('GET',finalurl)
                             f.read()
                             f.close()
+                            print('ECG sensors starting...')
+                            ECG = ECg_Readings()
                             if temperature > 38 or temperature < 35 or spo2 < 92 or self.bpm < 60 or self.bpm > 100:                    # temperature threshold
                                 # *** take an action regarding the cloud ***
                                 report = {}
                                 report["value1"] = temperature
                                 report["value2"] = self.bpm
                                 report["value3"] = spo2
-                                requests.post('https://maker.ifttt.com/trigger/123/with/key/nRm3Yf4BU-Irdwh4MnqoXmsH4SoHxY7wf7EpsgvFV26',data=report)
+                                #requests.post('https://maker.ifttt.com/trigger/123/with/key/nRm3Yf4BU-Irdwh4MnqoXmsH4SoHxY7wf7EpsgvFV26',data=report)
 
                                     # break out of the loop
                          

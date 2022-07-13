@@ -10,12 +10,13 @@ parser.add_argument("-t", "--time", type=int, default=30,
                     help="duration in seconds to read from sensor, default 30")
 args = parser.parse_args()
 
-print('sensors starting...')
 while True:
+    print('Temperature and oximeter sensors starting...')
     hrm = HeartRateMonitor(print_raw=args.raw, print_result=(not args.raw))
     hrm.start_sensor()
-    time.sleep(5)
-    ECG = ECg_Readings()
+    #time.sleep(25)
+    #print('ECG sensors starting...')
+    #ECG = ECg_Readings()
     try:
         time.sleep(args.time)
     except KeyboardInterrupt:
