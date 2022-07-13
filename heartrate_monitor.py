@@ -1,4 +1,3 @@
-
 from max30102 import MAX30102
 from ECG_Readings import ECg_Readings
 from w1thermsensor import W1ThermSensor
@@ -11,6 +10,9 @@ import numpy as np
 import urllib3
 import requests
 import sys
+import datetime
+import csv
+
 
 baseURL = 'http://api.thingspeak.com/update?api_key=EGGDD5XE4A35W6MB'
 
@@ -31,8 +33,6 @@ class HeartRateMonitor(object):
     def run_sensor(self):
         temp_sensor = W1ThermSensor()                 # create an object to store a connection the sensor. 
         temperature = temp_sensor.get_temperature()   # get the current temperature from the DS18B20 sensor,
-        ECG = ECg_Readings()
-        print( "--------------------------------------------" )
         sensor = MAX30102()
         ir_data = []
         red_data = []
@@ -75,11 +75,21 @@ class HeartRateMonitor(object):
                                 report["value2"] = self.bpm
                                 report["value3"] = spo2
                                 #requests.post('https://maker.ifttt.com/trigger/123/with/key/nRm3Yf4BU-Irdwh4MnqoXmsH4SoHxY7wf7EpsgvFV26',data=report)
-
-                            for i in range(0,200)
-                                print("The temperature is {} celsius , BPM: {0}, SpO2: {1}".format(temperature,self.bpm, spo2))
+                            print("BPM: {0}, SpO2: {1}".format(self.bpm, spo2))
+                            print("The temperature is %s celsius" %temperature)
+                            
+                            time.sleep(1)
+                            ECG = ECg_Readings()
+                            
+                            for i in range(0,100):
+                                print("BPM: {0}, SpO2: {1}".format(self.bpm, spo2))
+                                print("The temperature is %s celsius" %temperature)
                                 print("ECG_volts : {} ({}V)".format(i,ECG[i]))
                                 print( "--------------------------------------------" )
+                                now = datetime.datetime.now()
+                                timeString = now.strftime("%Y-%m-%d %H:%M:%S.%f")
+                                with open('Sensor_Readings.csv', 'a') as log:
+                                    log.write("{},{},{},{},{}\n".format(timeString, ECG[i],self.bpm,spo2,temperature))
                                 finalurl = baseURL +"&field1=%s&field2=%s&field3=%s&field4=%s" %(ECG[i],self.bpm,spo2,temperature)
                                 http = urllib3.PoolManager()
                                 f = http.request('GET',finalurl)
@@ -88,7 +98,7 @@ class HeartRateMonitor(object):
                                                      
 
             #time.sleep(self.LOOP_TIME)
-            time.sleep(0.001)
+            #time.sleep(0.001)
 
         #sensor.shutdown()
 
